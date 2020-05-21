@@ -21,9 +21,9 @@ export default function BottomTabNavigator({ navigation, route }) {
         name="Home"
         component={Home2Screen}
         options={{
-          title: 'Home',
+          title: 'Players',
           tabBarIcon: ({ focused }) => (
-            <TabBarIcon focused={focused} name="md-home" />
+            <TabBarIcon focused={focused} name="md-search" />
           ),
         }}
       />
@@ -31,13 +31,13 @@ export default function BottomTabNavigator({ navigation, route }) {
         name="GetStarted"
         component={HomeScreen}
         options={{
-          title: 'Get Started',
+          title: 'Favorites',
           tabBarIcon: ({ focused }) => (
-            <TabBarIcon focused={focused} name="md-code-working" />
+            <TabBarIcon focused={focused} name="md-heart" />
           ),
         }}
       />
-      <BottomTab.Screen
+      {/* <BottomTab.Screen
         name="Links"
         component={LinksScreen}
         options={{
@@ -46,7 +46,7 @@ export default function BottomTabNavigator({ navigation, route }) {
             <TabBarIcon focused={focused} name="md-book" />
           ),
         }}
-      />
+      /> */}
     </BottomTab.Navigator>
   );
 }

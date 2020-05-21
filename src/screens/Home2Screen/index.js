@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { View, Text, Alert } from 'react-native';
-import { TextInput } from 'react-native-paper';
+import { TextInput, Card, Avatar } from 'react-native-paper';
 import RNPickerSelect from 'react-native-picker-select';
 import { FlatList } from 'react-native-gesture-handler';
 import {
@@ -14,7 +14,7 @@ import {
 import colors from '../../constants/Colors';
 import { search } from '../../services/R6tab';
 
-const Home2Screen = () => {
+const Home2Screen = ({ navigation }) => {
   const [nickname, setNickName] = useState('');
   const [platform, setPlatform] = useState('');
   const [players, setPlayers] = useState([]);
@@ -28,6 +28,7 @@ const Home2Screen = () => {
   const handleSearch = useCallback(async () => {
     if (!platform) {
       Alert.alert('Informe plataforma', 'ok');
+      return;
     }
 
     const res = await search({
@@ -43,10 +44,58 @@ const Home2Screen = () => {
     if (!playersKeys) {
       throw new Error('Nao encontrado');
     }
+    const playersMapped = [];
+    // setPlayers(res.data.players);
+    playersKeys.forEach((key) => {
+      playersMapped.push(res.data.players[key]);
+    });
 
-    setPlayers(res.data.players);
-    console.log(res.data.players.profile);
+    setPlayers(playersMapped);
   }, [nickname, platform]);
+
+  const getPlatformIcon = useCallback(
+    ({ props }) => {
+      switch (platform) {
+        case 'xbl':
+          return (
+            <Avatar.Icon
+              {...props}
+              style={{ backgroundColor: 'white' }}
+              size={60}
+              icon="xbox"
+            />
+          );
+        case 'psn':
+          return (
+            <Avatar.Icon
+              {...props}
+              style={{ backgroundColor: 'white' }}
+              size={60}
+              icon="playstation"
+            />
+          );
+        case 'uplay':
+          return (
+            <Avatar.Icon
+              {...props}
+              style={{ backgroundColor: 'white' }}
+              size={60}
+              icon="ubisoft"
+            />
+          );
+        default:
+          return (
+            <Avatar.Icon
+              {...props}
+              style={{ backgroundColor: 'white' }}
+              size={60}
+              icon="ubisoft"
+            />
+          );
+      }
+    },
+    [platform]
+  );
 
   return (
     <Container>
@@ -60,9 +109,9 @@ const Home2Screen = () => {
         <RNPickerSelect
           onValueChange={(value) => setPlatform(value)}
           items={[
-            { label: 'XBOX', value: 'xbl' },
+            { label: 'Xbox', value: 'xbl' },
             { label: 'Playstation', value: 'psn' },
-            { label: 'PC', value: 'uplay' },
+            { label: 'Uplay', value: 'uplay' },
           ]}
         />
         <SubmitButton onPress={handleSearch}>SEARCH</SubmitButton>
@@ -74,14 +123,25 @@ const Home2Screen = () => {
         refreshing={false}
         keyExtractor={(item) => String(item.profile.p_id)}
         renderItem={({ item }) => (
-          <PlayerButton>
-            <PlayerAvatar
-              source={{
-                uri: `https://ubisoft-avatars.akamaized.net/${item.profile.Formp_id}/default_146_146.png`,
-              }}
+          <Card style={{ marginTop: 16 }}>
+            <Card.Title
+              title={item.profile.p_name}
+              subtitle={`Level: ${
+                item.stats.level
+              } | KD: ${item.ranked.kd.toFixed(2)}`}
+              subtitleStyle={{ fontSize: 16 }}
+              left={(props) => (
+                <Avatar.Image
+                  {...props}
+                  style={{ backgroundColor: colors.primary }}
+                  source={{
+                    uri: `https://ubisoft-avatars.akamaized.net/${item.profile.p_id}/default_146_146.png`,
+                  }}
+                />
+              )}
+              right={(props) => getPlatformIcon({ props })}
             />
-            <PlayerNickname>{item.profile.p_name}</PlayerNickname>
-          </PlayerButton>
+          </Card>
         )}
       />
     </Container>

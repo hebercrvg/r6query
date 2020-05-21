@@ -27,5 +27,11 @@ module.exports = {
     "no-useless-constructor": "off",
     "react/no-string-refs": "off",
     "react/require-default-props": "off",
+    "prettier/prettier": "error",
+    "react-hooks/rules-of-hooks": "error",
+    "no-unused-expressions": "off",
+    "react-hooks/exhaustive-deps": "warn",
+    "import/prefer-default-export": "off",
+    "react/jsx-props-no-spreading": "off",
   },
 };

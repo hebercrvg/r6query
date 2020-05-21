@@ -21,7 +21,6 @@ export const Container = styled.View`
 
 export const Form = styled.View`
   flex-direction: column;
-  padding-bottom: 20px;
   border-bottom-width: 1px;
   border-color: ${Colors.grayLight};
 `;
@@ -43,4 +42,20 @@ export const SubmitButton = styled(Button).attrs({
 `;
 export const Platforms = styled(Button)`
   padding: 30px;
+`;
+
+export const PlayerButton = styled.TouchableOpacity`
+  flex-direction: row;
+  padding: 10px;
+  align-items: center;
+`;
+
+export const PlayerAvatar = styled.Image`
+  height: 50px;
+  width: 50px;
+  border-radius: 25px;
+`;
+
+export const PlayerNickname = styled.Text`
+  margin-left: 10px;
 `;

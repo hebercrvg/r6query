@@ -2,9 +2,11 @@ import * as React from 'react';
 import { SplashScreen } from 'expo';
 import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
+import { View } from 'react-native';
 import useLinking from './src/navigation/useLinking';
 import SpaceMono from './src/assets/fonts/SpaceMono-Regular.ttf';
 import Routes from './src/routes';
+import colors from './src/constants/Colors';
 
 export default function App(props) {
   const [isLoadingComplete, setLoadingComplete] = React.useState(false);
@@ -41,5 +43,9 @@ export default function App(props) {
   if (!isLoadingComplete && !props.skipLoadingScreen) {
     return null;
   }
-  return <Routes />;
+  return (
+    <View style={{ flex: 1, backgroundColor: colors.white }}>
+      <Routes />
+    </View>
+  );
 }

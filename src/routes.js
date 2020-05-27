@@ -1,19 +1,16 @@
 import React from 'react';
 import { StatusBar, Platform } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-
-import BottomTabNavigator from './navigation/BottomTabNavigator';
+import BottomTabNavigation from './navigation/BottomTabNavigator';
+import HomeStack from './navigation/HomeStack';
 // import { Container } from './styles';
-const Stack = createStackNavigator();
+
 const src = () => {
   return (
     <>
-      {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
+      {Platform.OS === 'ios' && <StatusBar barStyle="default" translucent />}
       <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen name="Root" component={BottomTabNavigator} />
-        </Stack.Navigator>
+        <BottomTabNavigation />
       </NavigationContainer>
     </>
   );

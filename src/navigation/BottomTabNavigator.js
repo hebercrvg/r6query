@@ -3,13 +3,14 @@ import * as React from 'react';
 
 import TabBarIcon from '../components/TabBarIcon';
 import HomeStack from './HomeStack';
+import FavoritesStack from './FavoritesStack';
 
 const BottomTab = createBottomTabNavigator();
 // const INITIAL_ROUTE_NAME = 'Home';
 
 export default function BottomTabNavigator({ navigation, route }) {
   return (
-    <BottomTab.Navigator initialRouteName="HomeStack">
+    <BottomTab.Navigator>
       <BottomTab.Screen
         name="Home"
         component={HomeStack}
@@ -20,16 +21,16 @@ export default function BottomTabNavigator({ navigation, route }) {
           ),
         }}
       />
-      {/* <BottomTab.Screen
-        name="GetStarted"
-        component={HomeScreen}
+      <BottomTab.Screen
+        name="Favorites"
+        component={FavoritesStack}
         options={{
           title: 'Favorites',
           tabBarIcon: ({ focused }) => (
             <TabBarIcon focused={focused} name="md-heart" />
           ),
         }}
-      /> */}
+      />
       {/* <BottomTab.Screen
         name="Links"
         component={LinksScreen}

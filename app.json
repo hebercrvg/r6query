@@ -2,6 +2,14 @@
   "expo": {
     "name": "r6query",
     "slug": "r6query",
+    "ios": {
+      "bundleIdentifier": "com.heberabreu.r6query",
+      "buildNumber": "1.0.0"
+    },
+    "android": {
+      "package": "com.heberabreu.r6query",
+      "versionCode": 1
+    },
     "platforms": ["ios", "android", "web"],
     "version": "1.0.0",
     "orientation": "portrait",
@@ -15,9 +23,6 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
-    "ios": {
-      "supportsTablet": true
-    }
+    "assetBundlePatterns": ["**/*"]
   }
 }

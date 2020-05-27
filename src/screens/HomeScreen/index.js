@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { useCallback, useState } from 'react';
-import { Alert } from 'react-native';
+import { Alert, Keyboard } from 'react-native';
 import { TextInput, Card, Avatar, Searchbar } from 'react-native-paper';
 import RNPickerSelect from 'react-native-picker-select';
 import { FlatList } from 'react-native-gesture-handler';
@@ -22,10 +22,11 @@ const HomeScreen = ({ navigation }) => {
   );
 
   const handleSearch = useCallback(async () => {
+    Keyboard.dismiss();
     setLoading(true);
     if (!platform) {
       setLoading(false);
-      Alert.alert('Informe plataforma', 'ok');
+      Alert.alert('Ops...', 'Informe a plataforma.');
       return;
     }
 
@@ -57,8 +58,14 @@ const HomeScreen = ({ navigation }) => {
   const renderPlayersCards = ({ item }) => {
     return (
       <Card
-        style={{ marginTop: 16 }}
         onPress={() => navigation.navigate('Player', { profile: item.profile })}
+        elevation={5}
+        style={{
+          marginTop: 16,
+          marginBottom: 5,
+          marginLeft: 5,
+          marginRight: 5,
+        }}
       >
         <Card.Title
           title={item.profile.p_name}
@@ -87,13 +94,19 @@ const HomeScreen = ({ navigation }) => {
             />
           )}
         />
+        <Card.Content />
       </Card>
     );
   };
   return (
     <Container>
       <Form>
-        <Searchbar placeholder="Search" onChangeText={handleChangeNickname} />
+        <Searchbar
+          placeholder="Search"
+          onChangeText={handleChangeNickname}
+          autoCorrect={false}
+          autoCapitalize="none"
+        />
         <RNPickerSelect
           style={{ placeholder: { color: 'black' } }}
           onValueChange={(value) => setPlatform(value)}
@@ -102,6 +115,7 @@ const HomeScreen = ({ navigation }) => {
             { label: 'Playstation', value: 'psn' },
             { label: 'Uplay', value: 'uplay' },
           ]}
+          placeholder={{ label: 'Select the platform', value: null }}
         />
         <SubmitButton onPress={handleSearch} loading={loading}>
           SEARCH

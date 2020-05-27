@@ -23,6 +23,7 @@ export const Form = styled.View`
   flex-direction: column;
   border-bottom-width: 1px;
   border-color: ${Colors.grayLight};
+  margin-bottom: 16px;
 `;
 
 export const Input = styled.TextInput.attrs({

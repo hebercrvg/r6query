@@ -61,7 +61,9 @@ const Player = ({ route }) => {
       await saveFavoriteStorage({ player });
       const newData = data;
       newData.isFavorited = !favorited;
+
       setData(newData);
+      await getPlayerData();
       setLoading(false);
     },
     [saveFavoriteStorage, unfavorite]

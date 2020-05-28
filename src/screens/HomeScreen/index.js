@@ -1,7 +1,14 @@
 /* eslint-disable react/prop-types */
 import React, { useCallback, useState } from 'react';
-import { Alert, Keyboard } from 'react-native';
-import { TextInput, Card, Avatar, Searchbar } from 'react-native-paper';
+import { Alert, Keyboard, View } from 'react-native';
+import {
+  TextInput,
+  Card,
+  Avatar,
+  Searchbar,
+  RadioButton,
+  Text,
+} from 'react-native-paper';
 import RNPickerSelect from 'react-native-picker-select';
 import { FlatList } from 'react-native-gesture-handler';
 import { Container, Form, SubmitButton } from './styles';
@@ -34,6 +41,7 @@ const HomeScreen = ({ navigation }) => {
       nickname,
       platform,
     });
+
     if (res.status !== 200) {
       setLoading(false);
       throw new Error('Erro requisição.');
@@ -107,16 +115,31 @@ const HomeScreen = ({ navigation }) => {
           autoCorrect={false}
           autoCapitalize="none"
         />
-        <RNPickerSelect
-          style={{ placeholder: { color: 'black' } }}
+        <RadioButton.Group
           onValueChange={(value) => setPlatform(value)}
-          items={[
-            { label: 'Xbox', value: 'xbl' },
-            { label: 'Playstation', value: 'psn' },
-            { label: 'Uplay', value: 'uplay' },
-          ]}
-          placeholder={{ label: 'Select the platform', value: null }}
-        />
+          value={platform}
+        >
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-around',
+            }}
+          >
+            <View>
+              <Text>First</Text>
+              <RadioButton value="first" />
+            </View>
+            <View>
+              <Text>Second</Text>
+              <RadioButton value="first" />
+            </View>
+            <View>
+              <Text>Thist</Text>
+              <RadioButton value="first" />
+            </View>
+          </View>
+        </RadioButton.Group>
         <SubmitButton onPress={handleSearch} loading={loading}>
           SEARCH
         </SubmitButton>

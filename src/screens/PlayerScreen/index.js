@@ -22,11 +22,11 @@ const Player = ({ route }) => {
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(false);
   const isFavorited = useCallback(
-    async (playerId) => {
+    async playerId => {
       const favorited = await isFavoritedStorage({ playerId });
       return favorited;
     },
-    [isFavoritedStorage]
+    [isFavoritedStorage],
   );
   const getPlayerData = async () => {
     setLoading(true);
@@ -43,7 +43,7 @@ const Player = ({ route }) => {
   };
 
   const saveFavorite = useCallback(
-    async (player) => {
+    async player => {
       setLoading(true);
       const favorited = await isFavorited(player.player.p_id);
 
@@ -66,7 +66,7 @@ const Player = ({ route }) => {
       await getPlayerData();
       setLoading(false);
     },
-    [saveFavoriteStorage, unfavorite]
+    [saveFavoriteStorage, unfavorite],
   );
 
   useEffect(() => {
@@ -83,23 +83,23 @@ const Player = ({ route }) => {
             style={{ marginTop: 12 }}
             title={data?.player?.p_name}
             subtitle={`Level: ${data?.stats?.level} | KD: ${data?.stats?.rankedpvp_kd}`}
-            titleStyle={{ fontSize: 30, marginLeft: 40 }}
-            subtitleStyle={{ fontSize: 18, marginLeft: 40 }}
+            titleStyle={{ fontSize: 24, marginLeft: 12 }}
+            subtitleStyle={{ fontSize: 14, marginLeft: 12 }}
             leftStyle={{ marginLeft: 0 }}
-            left={(props) => (
+            left={props => (
               <Avatar.Image
                 {...props}
-                size={80}
+                size={60}
                 source={{
                   uri: `https://ubisoft-avatars.akamaized.net/${data?.player?.p_id}/default_146_146.png`,
                 }}
               />
             )}
-            right={(props) => (
+            right={props => (
               <View>
                 <Avatar.Icon
                   {...props}
-                  size={50}
+                  size={40}
                   icon={data?.isFavorited ? 'heart' : 'heart-outline'}
                   color={colors.red}
                   style={{ backgroundColor: colors.white }}
@@ -108,7 +108,10 @@ const Player = ({ route }) => {
               </View>
             )}
           />
-          <Card.Content style={{ marginTop: 26 }}>
+          <Button onPress={() => saveFavorite(data)}>
+            {data?.isFavorited ? 'UNFAVORITE' : 'FAVORITE'}
+          </Button>
+          <Card.Content>
             <Headline style={{ fontWeight: 'bold', marginTop: 8 }}>
               Ranked Stats
             </Headline>
@@ -209,9 +212,6 @@ const Player = ({ route }) => {
                 <Subheading>{`${data?.stats?.casualpvp_hoursplayed} hrs`}</Subheading>
               </Stats>
             </MatchesContainer>
-            <Button onPress={() => saveFavorite(data)}>
-              {data?.isFavorited ? 'UNFAVORITE' : 'FAVORITE'}
-            </Button>
           </Card.Content>
         </Card>
       )}

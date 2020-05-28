@@ -22,13 +22,14 @@ const HomeScreen = ({ navigation }) => {
   const [players, setPlayers] = useState([]);
   const [loading, setLoading] = useState(false);
   const handleChangeNickname = useCallback(
-    (value) => {
+    value => {
       setNickName(value);
     },
-    [setNickName]
+    [setNickName],
   );
 
   const handleSearch = useCallback(async () => {
+    console.log(platform);
     Keyboard.dismiss();
     setLoading(true);
     if (!platform) {
@@ -55,7 +56,7 @@ const HomeScreen = ({ navigation }) => {
     }
     const playersMapped = [];
     // setPlayers(res.data.players);
-    playersKeys.forEach((key) => {
+    playersKeys.forEach(key => {
       playersMapped.push(res.data.players[key]);
     });
 
@@ -78,10 +79,10 @@ const HomeScreen = ({ navigation }) => {
         <Card.Title
           title={item.profile.p_name}
           subtitle={`Level: ${item.stats.level} | KD: ${item.ranked.kd.toFixed(
-            2
+            2,
           )}`}
           subtitleStyle={{ fontSize: 16 }}
-          left={(props) => (
+          left={props => (
             <Avatar.Image
               {...props}
               style={{ backgroundColor: colors.white }}
@@ -91,7 +92,7 @@ const HomeScreen = ({ navigation }) => {
               }}
             />
           )}
-          right={(props) => (
+          right={props => (
             <Avatar.Image
               {...props}
               style={{ backgroundColor: colors.white }}
@@ -115,31 +116,33 @@ const HomeScreen = ({ navigation }) => {
           autoCorrect={false}
           autoCapitalize="none"
         />
-        <RadioButton.Group
-          onValueChange={(value) => setPlatform(value)}
-          value={platform}
-        >
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-around',
-            }}
+        <View style={{ marginTop: 10 }}>
+          <RadioButton.Group
+            onValueChange={value => setPlatform(value)}
+            value={platform}
           >
-            <View>
-              <Text>First</Text>
-              <RadioButton value="first" />
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-around',
+              }}
+            >
+              <View>
+                <Text>XBOX</Text>
+                <RadioButton value="xbl" />
+              </View>
+              <View>
+                <Text>PSN</Text>
+                <RadioButton value="psn" />
+              </View>
+              <View>
+                <Text>UPLAY</Text>
+                <RadioButton value="uplay" />
+              </View>
             </View>
-            <View>
-              <Text>Second</Text>
-              <RadioButton value="first" />
-            </View>
-            <View>
-              <Text>Thist</Text>
-              <RadioButton value="first" />
-            </View>
-          </View>
-        </RadioButton.Group>
+          </RadioButton.Group>
+        </View>
         <SubmitButton onPress={handleSearch} loading={loading}>
           SEARCH
         </SubmitButton>
@@ -149,7 +152,7 @@ const HomeScreen = ({ navigation }) => {
         data={players}
         onRefresh={handleSearch}
         refreshing={false}
-        keyExtractor={(item) => String(item.profile.p_id)}
+        keyExtractor={item => String(item.profile.p_id)}
         renderItem={renderPlayersCards}
       />
     </Container>

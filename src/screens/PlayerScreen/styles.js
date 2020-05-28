@@ -9,7 +9,7 @@ export const Container = styled.ScrollView`
 `;
 
 export const Title = styled(TitlePaper)`
-  font-size: 18px;
+  font-size: 16px;
   font-weight: bold;
 `;
 

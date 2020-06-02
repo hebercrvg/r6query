@@ -8,6 +8,7 @@ import {
   Searchbar,
   RadioButton,
   Text,
+  Snackbar,
 } from 'react-native-paper';
 import RNPickerSelect from 'react-native-picker-select';
 import { FlatList } from 'react-native-gesture-handler';
@@ -21,6 +22,8 @@ const HomeScreen = ({ navigation }) => {
   const [platform, setPlatform] = useState('');
   const [players, setPlayers] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [toastVisible, setToastVisible] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
   const handleChangeNickname = useCallback(
     value => {
       setNickName(value);
@@ -28,13 +31,22 @@ const HomeScreen = ({ navigation }) => {
     [setNickName],
   );
 
+  const showToast = (visible = false, message = '') => {
+    setToastVisible(visible);
+    setToastMessage(message);
+  };
+
   const handleSearch = useCallback(async () => {
-    console.log(platform);
     Keyboard.dismiss();
     setLoading(true);
     if (!platform) {
       setLoading(false);
-      Alert.alert('Ops...', 'Informe a plataforma.');
+      Alert.alert('Ops...', 'Select one platform.');
+      return;
+    }
+    if (!nickname) {
+      setLoading(false);
+      Alert.alert('Ops...', 'Type a nickname.');
       return;
     }
 
@@ -45,14 +57,15 @@ const HomeScreen = ({ navigation }) => {
 
     if (res.status !== 200) {
       setLoading(false);
-      throw new Error('Erro requisição.');
+      setLoading(false);
+      showToast(true, 'Network error.');
     }
 
     // const players = res.data.pyers
     const playersKeys = Object.keys(res.data.players);
-    if (!playersKeys) {
+    if (!playersKeys || playersKeys?.length == 0) {
       setLoading(false);
-      throw new Error('Nao encontrado');
+      showToast(true, 'Player not found.');
     }
     const playersMapped = [];
     // setPlayers(res.data.players);
@@ -98,64 +111,74 @@ const HomeScreen = ({ navigation }) => {
               style={{ backgroundColor: colors.white }}
               size={45}
               source={{
-                uri: getRankIconByMMR(item.ranked.mmr),
+                uri: `https://tabstats.com/images/r6/ranks/?rank=${item.ranked.rank}&champ=0`,
               }}
             />
           )}
+          rightStyle={{ marginRight: 5 }}
         />
         <Card.Content />
       </Card>
     );
   };
   return (
-    <Container>
-      <Form>
-        <Searchbar
-          placeholder="Search"
-          onChangeText={handleChangeNickname}
-          autoCorrect={false}
-          autoCapitalize="none"
-        />
-        <View style={{ marginTop: 10 }}>
-          <RadioButton.Group
-            onValueChange={value => setPlatform(value)}
-            value={platform}
-          >
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-around',
-              }}
+    <>
+      <Container>
+        <Form>
+          <Searchbar
+            placeholder="Search"
+            onChangeText={handleChangeNickname}
+            autoCorrect={false}
+            autoCapitalize="none"
+          />
+          <View style={{ marginTop: 10 }}>
+            <RadioButton.Group
+              onValueChange={value => setPlatform(value)}
+              value={platform}
             >
-              <View>
-                <Text>XBOX</Text>
-                <RadioButton value="xbl" />
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-around',
+                }}
+              >
+                <View>
+                  <Text>XBOX</Text>
+                  <RadioButton value="xbl" />
+                </View>
+                <View>
+                  <Text>PSN</Text>
+                  <RadioButton value="psn" />
+                </View>
+                <View>
+                  <Text>UPLAY</Text>
+                  <RadioButton value="uplay" />
+                </View>
               </View>
-              <View>
-                <Text>PSN</Text>
-                <RadioButton value="psn" />
-              </View>
-              <View>
-                <Text>UPLAY</Text>
-                <RadioButton value="uplay" />
-              </View>
-            </View>
-          </RadioButton.Group>
-        </View>
-        <SubmitButton onPress={handleSearch} loading={loading}>
-          SEARCH
-        </SubmitButton>
-      </Form>
-      <FlatList
-        showsVerticalScrollIndicator={false}
-        data={players}
-        onRefresh={handleSearch}
-        refreshing={false}
-        keyExtractor={item => String(item.profile.p_id)}
-        renderItem={renderPlayersCards}
-      />
-    </Container>
+            </RadioButton.Group>
+          </View>
+          <SubmitButton onPress={handleSearch} loading={loading}>
+            SEARCH
+          </SubmitButton>
+        </Form>
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          data={players}
+          onRefresh={handleSearch}
+          refreshing={false}
+          keyExtractor={item => String(item.profile.p_id)}
+          renderItem={renderPlayersCards}
+        />
+      </Container>
+      <Snackbar
+        duration={3000}
+        visible={toastVisible}
+        onDismiss={() => setToastVisible(false)}
+      >
+        {toastMessage}
+      </Snackbar>
+    </>
   );
 };
 

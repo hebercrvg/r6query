@@ -5,6 +5,7 @@ import { Avatar, Card } from 'react-native-paper';
 import { Container } from './styles';
 import colors from '../../constants/Colors';
 import { getRankIconByMMR } from '../../services/Rank';
+import { getPlayer } from '../../services/R6tab';
 import { getFavorites as getFavoritesStorage } from '../../services/Storage';
 
 const Favorites = ({ navigation }) => {
@@ -14,16 +15,25 @@ const Favorites = ({ navigation }) => {
   const getFavorites = useCallback(async () => {
     setLoading(true);
     const favoritesSaved = await getFavoritesStorage();
+    favoritesSaved.forEach(item => {
+      getPlayer({ playerId: item?.player?.p_id }).then(res => {
+        item.player.p_name = res.data.player.p_name;
+        console.log(res.data.player.p_name);
+      });
+    });
 
-    setFavorites(favoritesSaved);
-    setLoading(false);
+    //console.log(favoritesSaved);
+    setTimeout(() => {
+      setFavorites(favoritesSaved);
+      setLoading(false);
+    }, 2000);
   }, []);
 
   useEffect(() => {
     getFavorites();
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       getFavorites();
     });
@@ -31,13 +41,12 @@ const Favorites = ({ navigation }) => {
     // Return the function to unsubscribe from the event so it gets removed on unmount
     return unsubscribe;
   }, [navigation]);
-
   return (
     <Container>
       {loading ? (
         <ActivityIndicator size="large" />
       ) : (
-        favorites.map((item) => (
+        favorites?.map(item => (
           <Card
             key={String(item?.player?.p_id)}
             onPress={() =>
@@ -54,10 +63,10 @@ const Favorites = ({ navigation }) => {
             <Card.Title
               title={item?.player?.p_name}
               subtitle={`Level: ${
-                item?.stats.level
+                item?.stats?.level
               } | KD: ${item?.ranked?.kd?.toFixed(2)}`}
               subtitleStyle={{ fontSize: 16 }}
-              left={(props) => (
+              left={props => (
                 <Avatar.Image
                   {...props}
                   style={{ backgroundColor: colors.white }}
@@ -67,13 +76,13 @@ const Favorites = ({ navigation }) => {
                   }}
                 />
               )}
-              right={(props) => (
+              right={props => (
                 <Avatar.Image
                   {...props}
                   style={{ backgroundColor: colors.white }}
                   size={45}
                   source={{
-                    uri: getRankIconByMMR(item?.ranked.mmr),
+                    uri: `https://tabstats.com/images/r6/ranks/?rank=${item?.ranked?.rank}&champ=0`,
                   }}
                 />
               )}
